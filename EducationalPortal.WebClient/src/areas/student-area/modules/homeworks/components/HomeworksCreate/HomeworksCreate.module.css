@@ -1,0 +1,19 @@
+.buttonUpload span {
+    background-color: #009432;
+    transition: .5s all ease;
+    cursor: pointer;
+}
+
+.buttonUpload:hover span {
+    background-color: #CFD3E4;
+}
+
+.buttonUpload svg {
+    color: white;
+    transition: .5s all ease;
+}
+
+.buttonUpload:hover svg,
+.buttonUpload span:hover svg {
+    color: #009432;
+}

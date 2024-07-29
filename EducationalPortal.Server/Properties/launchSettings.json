@@ -1,0 +1,35 @@
+﻿{
+  "iisSettings": {
+    "windowsAuthentication": false,
+    "anonymousAuthentication": true,
+    "iisExpress": {
+      "applicationUrl": "http://localhost:54105",
+      "sslPort": 44381
+    }
+  },
+  "profiles": {
+    "EducationalPortal.Server": {
+      "commandName": "Project",
+      "launchBrowser": true,
+      "applicationUrl": "https://localhost:7246;http://localhost:5246",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development",
+        "AuthValidAudience": "AuthValidAudience",
+        "AuthValidIssuer": "AuthValidIssuer",
+        "AuthIssuerSigningKey": "AuthIssuerSigningKey",
+        "CLOUDINARY_URL": "cloudinary://747821446766422:jvKQAwD9q3RpMBfwiXog7W7g4cw@hoeh3kagi",
+        "BACKUPS_FOLDER_PATH": "D:\\Diplom\\Backups",
+        "ATLAS_URI": "mongodb+srv://maingoose:maingoose@cluster0.4gamz.mongodb.net/?retryWrites=true&w=majority",
+        "PG_PATH": "C:\\OpenServer\\modules\\database\\PostgreSQL-13.3-Win10\\bin",
+        "MS_SQL_DATABASE_URL": "Data Source=(localdb)\\mssqllocaldb;Initial Catalog=EducationPortal;Integrated Security=True;Connect Timeout=30;Encrypt=False;Trust Server Certificate=False;Application Intent=ReadWrite;Multi Subnet Failover=False"
+      }
+    },
+    "IIS Express": {
+      "commandName": "IISExpress",
+      "launchBrowser": true,
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      }
+    }
+  }
+}

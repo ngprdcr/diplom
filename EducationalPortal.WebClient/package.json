@@ -1,0 +1,56 @@
+{
+  "name": "educationalportal.webclient",
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+    "@ant-design/icons": "^4.7.0",
+    "@apollo/client": "^3.6.6",
+    "@ckeditor/ckeditor5-build-classic": "^34.1.0",
+    "@ckeditor/ckeditor5-react": "^5.0.2",
+    "@reduxjs/toolkit": "^1.8.2",
+    "antd": "^4.20.7",
+    "apollo-upload-client": "^17.0.0",
+    "chart.js": "^3.8.0",
+    "cyrillic-to-translit-js": "^3.2.1",
+    "graphql": "^16.5.0",
+    "html-react-parser": "^1.4.14",
+    "lodash.debounce": "^4.0.8",
+    "moment": "^2.29.3",
+    "react": "^18.1.0",
+    "react-chartjs-2": "^4.2.0",
+    "react-dom": "^18.1.0",
+    "react-donut-chart": "^1.3.0",
+    "react-redux": "^8.0.2",
+    "react-router-dom": "^6.3.0",
+    "react-scripts": "5.0.1",
+    "redux": "^4.2.0"
+  },
+  "devDependencies": {
+    "@types/apollo-upload-client": "^17.0.0",
+    "@types/ckeditor__ckeditor5-build-classic": "^29.0.1",
+    "@types/lodash.debounce": "^4.0.7",
+    "@types/node": "^16.7.13",
+    "@types/react": "^18.0.0",
+    "@types/react-dom": "^18.0.0",
+    "@types/react-redux": "^7.1.24",
+    "@types/react-router-dom": "^5.3.3",
+    "typescript": "^4.4.2"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "eject": "react-scripts eject"
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  }
+}

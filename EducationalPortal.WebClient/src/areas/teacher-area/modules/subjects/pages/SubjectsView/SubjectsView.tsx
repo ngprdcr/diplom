@@ -8,7 +8,7 @@ import {
     GetSubjectWithPostsVars
 } from '../../../../../../graphQL/modules/subjects/subjects.queries';
 import {SubjectPostsIndex} from '../../../subjectPosts/components/SubjectPostsIndex/SubjectPostsIndex';
-import {message, Space, Tag} from 'antd';
+import {Button, message, Space, Tag} from 'antd';
 import Title from 'antd/es/typography/Title';
 import '../../../../../../styles/table.css';
 import {ButtonsVUR} from "../../../../../../components/ButtonsVUD/ButtonsVUR";
@@ -19,6 +19,7 @@ import {
 } from "../../../../../../graphQL/modules/subjects/subjects.mutations";
 import {Subject} from "../../../../../../graphQL/modules/subjects/subjects.types";
 import {useAppSelector} from "../../../../../../store/store";
+import {ButtonCreate} from "../../../../../../components/ButtonCreate/ButtonCreate";
 
 export const SubjectsView = () => {
     const params = useParams();
@@ -67,9 +68,14 @@ export const SubjectsView = () => {
             <Title level={2}>Перегляд предмету</Title>
             <Space align={'center'}>
                 <Title level={3}>{subject?.name}</Title>
-                {subject.teacherId === currentUser?.id &&
-                    <ButtonsVUR updateUrl={`../update/${subject?.id}`} onRemove={() => onRemove(subject?.id)}/>
-                }
+                {subject.teacherId === currentUser?.id && (
+                    <>
+                        <ButtonsVUR updateUrl={`../update/${subject?.id}`} onRemove={() => onRemove(subject?.id)}/>
+                        <Link to="journal">
+                            <Button type={'primary'} htmlType={'button'}>Журнал</Button>
+                        </Link>
+                    </>
+                )}
             </Space>
             <table className="infoTable">
                 <tbody>

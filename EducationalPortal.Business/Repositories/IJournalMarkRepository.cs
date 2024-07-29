@@ -3,9 +3,8 @@ using EducationalPortal.Business.Models;
 
 namespace EducationalPortal.Business.Repositories
 {
-    public interface IUserRepository : IBaseRepository<UserModel>
+    public interface IJournalMarkRepository : IBaseRepository<JournalMarkModel>
     {
-        Task<UserModel> GetByLoginAsync(string login);
-        Task<UserModel?> GetByLoginOrDefaultAsync(string login);
+
     }
 }

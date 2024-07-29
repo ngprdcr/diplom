@@ -9,7 +9,7 @@ namespace EducationalPortal.MsSql
     {
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
         {
-            Database.Migrate();
+            //Database.Migrate();
         }
 
         public DbSet<JournalMarkModel> JournalMarks { get; set; }

@@ -56,6 +56,9 @@ namespace EducationalPortal.Server.Extensions
             services.AddTransient<IQueryMarker, UsersQueries>();
             services.AddTransient<IMutationMarker, UsersMutations>();
 
+            services.AddTransient<IQueryMarker, JournalMarksQueries>();
+            services.AddTransient<IMutationMarker, JournalMarksMutations>();
+
             services.AddTransient<AppSchema>();
             services.AddGraphQLUpload();
             services
@@ -106,12 +109,12 @@ namespace EducationalPortal.Server.Extensions
             });
             return services;
         }
-        
+
         public static IServiceCollection AddServices(this IServiceCollection services, bool isDevelopment)
         {
             services.AddTransient<AuthService>();
             services.AddSingleton<CloudinaryService>();
-            if(!isDevelopment)
+            if (!isDevelopment)
                 services.AddSingleton<IHostedService, AutoBackupService>();
             return services;
         }

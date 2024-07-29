@@ -35,6 +35,7 @@ import {BackupsIndex} from "../modules/backups/pages/BackupsIndex/BackupsIndex";
 import {HomeworksMyIndex} from "../modules/homeworks/pages/HomeworksMyIndex/HomeworksMyIndex";
 import {SubjectPostsCreate} from "../modules/subjectPosts/components/SubjectPostsCreate/SubjectPostsCreate";
 import {SubjectPostsUpdate} from "../modules/subjectPosts/components/SubjectPostsUpdate/SubjectPostsUpdate";
+import {Journal} from "../modules/journal/Journal";
 
 const {Content} = Layout;
 
@@ -121,6 +122,7 @@ export const TeacherLayout: FC = () => {
                                 <Route path={':subjectId/subject-posts/update/:subjectPostId'} element={<SubjectPostsUpdate/>}/>
                                 <Route path={'create'} element={<SubjectsCreate/>}/>
                                 <Route path={'update/:subjectId'} element={<SubjectsUpdate/>}/>
+                                <Route path={':subjectId/journal'} element={<Journal/>}/>
                                 <Route path={'*'} element={<Error/>}/>
                             </Route>
 

@@ -18,6 +18,7 @@ namespace EducationalPortal.MsSql.Extensions
             services.AddScoped<ISubjectPostRepository, SubjectPostRepository>();
             services.AddScoped<ISubjectRepository, SubjectRepository>();
             services.AddScoped<IUserRepository, UserRepository>();
+            services.AddScoped<IJournalMarkRepository, JournalMarkRepository>();
             return services;
         }
     }

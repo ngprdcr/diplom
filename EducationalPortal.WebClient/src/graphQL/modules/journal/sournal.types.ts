@@ -1,6 +1,6 @@
 export type JournalMark = {
     id: string,
-    mark: number,
+    mark: number | null,
     date: string,
     studentId: string,
 }

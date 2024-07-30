@@ -8,13 +8,17 @@ namespace EducationalPortal.Server.GraphQL.Modules.Users
     {
         public JournalMarksType(IServiceProvider serviceProvider) : base()
         {
-            Field<NonNullGraphType<IntGraphType>>()
+            Field<IntGraphType>()
                .Name("Mark")
                .Resolve(context => context.Source.Mark);
 
-            Field<NonNullGraphType<DateTimeGraphType>>()
+            Field<NonNullGraphType<DateOnlyGraphType>>()
                .Name("Date")
-               .Resolve(context => context.Source.Date);
+               .Resolve(context => new DateOnly(context.Source.Date.Year, context.Source.Date.Month, context.Source.Date.Day));
+
+            Field<NonNullGraphType<GuidGraphType>>()
+               .Name("StudentId")
+               .Resolve(context => context.Source.StudentId);
 
         }
     }

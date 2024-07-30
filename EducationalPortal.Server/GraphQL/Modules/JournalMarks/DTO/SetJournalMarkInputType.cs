@@ -10,7 +10,7 @@ namespace EducationalPortal.Server.GraphQL.Modules.Users.DTO
                 .Name("Id")
                 .Resolve(context => context.Source.Id);
 
-            Field<NonNullGraphType<IntGraphType>>()
+            Field<IntGraphType>()
                 .Name("Mark")
                 .Resolve(context => context.Source.Mark);
 
@@ -23,12 +23,11 @@ namespace EducationalPortal.Server.GraphQL.Modules.Users.DTO
                .Name("SubjectId")
                .Resolve(context => context.Source.SubjectId);
 
-            Field<NonNullGraphType<DateTimeGraphType>>()
+            Field<NonNullGraphType<DateOnlyGraphType>>()
                .Name("Date")
                .Resolve(context => context.Source.Date);
-
         }
     }
 
-    public record SetJournalMarkInput(Guid? Id, int Mark, Guid StudentId, Guid SubjectId, DateTime Date);
+    public record SetJournalMarkInput(Guid? Id, int? Mark, Guid StudentId, Guid SubjectId, DateOnly Date);
 }

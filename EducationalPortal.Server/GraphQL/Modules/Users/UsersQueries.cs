@@ -12,7 +12,7 @@ namespace EducationalPortal.Server.GraphQL.Modules.Users
 {
     public class UsersQueries : ObjectGraphType, IQueryMarker
     {
-        public UsersQueries(IUserRepository usersRepository)
+        public UsersQueries(IUserRepository usersRepository, ISubjectRepository subjectRepository, IServiceProvider serviceProvider)
         {
             Field<NonNullGraphType<GetEntitiesResponseType<UserType, UserModel>>, GetEntitiesResponse<UserModel>>()
                 .Name("GetUsers")
@@ -38,6 +38,24 @@ namespace EducationalPortal.Server.GraphQL.Modules.Users
                             || (u.Email == null ? false : u.Email.ToLower().Contains(like.ToLower())));
 
                     return await usersRepository.WhereAsync(u => u.LastName, Order.Ascend, page, condition);
+                })
+                .AuthorizeWith(AuthPolicies.Teacher);
+
+            Field<NonNullGraphType<ListGraphType<NonNullGraphType<UserType>>>>()
+                .Name("GetStudents")
+                .Argument<NonNullGraphType<GuidGraphType>>("subjectId", "")
+                .ResolveAsync(async context =>
+                {
+                    var subjectId = context.GetArgument<Guid>("subjectId");
+
+                    using var scope = serviceProvider.CreateScope();
+                    var subjectRepository = scope.ServiceProvider.GetRequiredService<ISubjectRepository>();
+                    var usersRepository = scope.ServiceProvider.GetRequiredService<IUserRepository>();
+
+                    var subject = await subjectRepository.GetByIdAsync(subjectId, s => s.GradesHaveAccessRead);
+                    var gradeIds = subject.GradesHaveAccessRead.Select(g => g.Id);
+
+                    return await usersRepository.GetAsync(u => u.GradeId.HasValue && gradeIds.Contains(u.GradeId.Value));
                 })
                 .AuthorizeWith(AuthPolicies.Teacher);
 

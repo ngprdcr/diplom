@@ -1,3 +1,24 @@
 .journalTable, .journalTable th, .journalTable td {
     border: 1px solid black;
 }
+
+.journalTable th, .journalTable td{
+    padding: 2px 4px;
+}
+
+.markInput{
+    width: 90px;
+    text-align: center;
+    border: none;
+}
+
+.newDateForm{
+    margin: 10px 0;
+    display: flex;
+    gap: 10px
+}
+
+.newDatePicker {
+    width: 280px;
+}
+

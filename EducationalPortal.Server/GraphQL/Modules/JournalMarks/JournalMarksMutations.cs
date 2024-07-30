@@ -28,7 +28,7 @@ namespace EducationalPortal.Server.GraphQL.Modules.Users
                             Mark = input.Mark,
                             StudentId = input.StudentId,
                             SubjectId = input.SubjectId,
-                            Date = input.Date,
+                            Date = new DateTime(input.Date.Year, input.Date.Month, input.Date.Day),
                         };
                         await journalMarkRepository.CreateAsync(journalMark);
                     }

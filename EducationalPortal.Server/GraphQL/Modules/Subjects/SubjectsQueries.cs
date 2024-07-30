@@ -16,7 +16,7 @@ namespace EducationalPortal.Server.GraphQL.Modules.Subjects
         {
             Field<NonNullGraphType<SubjectType>, SubjectModel>()
                 .Name("GetSubject")
-                .Argument<NonNullGraphType<IdGraphType>, Guid>("Id", "Argument for get Subject")
+                .Argument<NonNullGraphType<GuidGraphType>, Guid>("Id", "Argument for get Subject")
                 .ResolveAsync(async context =>
                 {
                     Guid id = context.GetArgument<Guid>("Id");

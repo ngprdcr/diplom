@@ -7,7 +7,7 @@ export type GetSubjectVars = { id: string }
 
 export const GET_SUBJECT_QUERY = gql`
     ${SUBJECT_FRAGMENT}
-    query GetSubject($id: ID!) {
+    query GetSubject($id: Guid!) {
         getSubject(id: $id) {
             ...SubjectFragment
         }
@@ -39,7 +39,7 @@ export type GetSubjectWithPostsVars = { id: string, postsPage: number, withHomew
 
 export const GET_SUBJECT_WITH_POSTS_QUERY = gql`
     ${SUBJECT_WITH_POSTS_FRAGMENT}
-    query GetSubject($id: ID!, $postsPage: Int!, $withHomeworks: Boolean!, $withFiles: Boolean!, $withStatistics: Boolean!) {
+    query GetSubject($id: Guid!, $postsPage: Int!, $withHomeworks: Boolean!, $withFiles: Boolean!, $withStatistics: Boolean!) {
         getSubject(id: $id) {
             ...SubjectWithPostsFragment
         }

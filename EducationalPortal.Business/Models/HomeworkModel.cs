@@ -6,7 +6,7 @@ namespace EducationalPortal.Business.Models
     public class HomeworkModel : BaseModel
     {
         public string? Text { get; set; }
-        public string? Mark { get; set; }
+        public int? Mark { get; set; }
         public string? ReviewResult { get; set; }
         public HomeworkStatus Status { get; set; }
         public Guid? StudentId { get; set; }

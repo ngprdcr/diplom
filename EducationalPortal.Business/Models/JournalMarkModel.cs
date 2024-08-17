@@ -6,9 +6,16 @@ namespace EducationalPortal.Business.Models
     {
         public int? Mark { get; set; }
         public DateTime Date { get; set; }
+        public JournalMarkKind Type { get; set; }
         public Guid SubjectId { get; set; }
         public virtual SubjectModel? Subject { get; set; }
         public Guid StudentId { get; set; }
         public virtual UserModel? Student { get; set; }
     }
+}
+
+public enum JournalMarkKind
+{
+    Default,
+    Homework,
 }

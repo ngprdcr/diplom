@@ -16,12 +16,13 @@ namespace EducationalPortal.Server.GraphQL.Modules.Users
                .Name("Date")
                .Resolve(context => new DateOnly(context.Source.Date.Year, context.Source.Date.Month, context.Source.Date.Day));
 
+            Field<NonNullGraphType<JournalMarkKindType>>()
+               .Name("Type")
+               .Resolve(context => context.Source.Type);
+
             Field<NonNullGraphType<GuidGraphType>>()
                .Name("StudentId")
                .Resolve(context => context.Source.StudentId);
-
         }
     }
-
-
 }

@@ -1,6 +1,6 @@
 import s from './Journal.module.css';
 import {Link, useParams} from "react-router-dom";
-import {Button, DatePicker, Tag} from "antd";
+import {Button, DatePicker, Input, Select, Tag} from "antd";
 import React, { useEffect, useState} from "react";
 import {Mark} from "./Mark";
 import {useQuery} from "@apollo/client";
@@ -17,18 +17,39 @@ export const Journal = () => {
     const subjectId = params.subjectId as string;
 
     const [newDate, setNewDate] = useState<Moment | null>(null);
+    const [newType, setNewType] = useState<'DEFAULT' | 'HOMEWORK'>('DEFAULT');
 
     const journalQuery = useQuery<GetJournalData>(getJournal, {
-        variables: {subjectId}
+        variables: {subjectId},
+        fetchPolicy: "no-cache",
     });
 
+    const [defaultDates, setDefaultDates] = useState<string[]>([]);
+    const [homeworkDates, setHomeworkDates] = useState<string[]>([]);
     const [dates, setDates] = useState<string[]>([]);
 
     useEffect(() => {
         if(!journalQuery.data?.getJournalMarks)
             return;
 
-        const newDates = journalQuery.data?.getJournalMarks?.map(m => m.date).filter((value, index, array) => array.indexOf(value) === index)
+        const defaultDates = journalQuery.data?.getJournalMarks
+            ?.filter(m => m.type == 'DEFAULT')
+            ?.map(m => m.date)
+            .filter((value, index, array) => array.indexOf(value) === index)
+
+        defaultDates?.sort();
+        setDefaultDates(defaultDates)
+
+        const homeworkDates = journalQuery.data?.getJournalMarks
+            ?.filter(m => m.type == 'HOMEWORK')
+            ?.map(m => m.date)
+            .filter((value, index, array) => array.indexOf(value) === index)
+
+        homeworkDates?.sort();
+        setHomeworkDates(homeworkDates)
+
+        const newDates = [...defaultDates, ...homeworkDates].filter((value, index, array) => array.indexOf(value) === index)
+
         newDates?.sort();
         setDates(newDates)
     }, [journalQuery.data]);
@@ -38,7 +59,20 @@ export const Journal = () => {
         if(!newDate)
             return;
 
-        const newDates = [...dates, newDate.format('YYYY-MM-DD')].filter((value, index, array) => array.indexOf(value) === index)
+        const formattedDate =  newDate.format('YYYY-MM-DD');
+
+        if(newType === 'DEFAULT'){
+            const newDefaultDates = [...defaultDates, formattedDate].filter((value, index, array) => array.indexOf(value) === index)
+            newDefaultDates?.sort();
+            setDefaultDates(newDefaultDates)
+        }
+        else{
+            const newHomeworkDates = [...homeworkDates, formattedDate].filter((value, index, array) => array.indexOf(value) === index)
+            newHomeworkDates?.sort();
+            setHomeworkDates(newHomeworkDates)
+        }
+
+        const newDates = [...dates, formattedDate].filter((value, index, array) => array.indexOf(value) === index)
         newDates?.sort();
         setDates(newDates)
     }
@@ -51,12 +85,17 @@ export const Journal = () => {
             return false;
 
         const currentDate = current.format('YYYY-MM-DD');
-        return dates.includes(currentDate)
+
+        const containsDate = newType === 'DEFAULT'
+            ? defaultDates.includes(currentDate)
+            : homeworkDates.includes(currentDate)
+
+        return containsDate
             || currentDate < journalQuery.data.getSubject.educationalYear.dateStart
             || currentDate > journalQuery.data.getSubject.educationalYear.dateEnd;
     };
 
-    console.log(dates)
+    console.log({dates, defaultDates, homeworkDates})
     const subject= journalQuery.data?.getSubject;
 
     return (
@@ -118,22 +157,67 @@ export const Journal = () => {
                    disabledDate={disabledDate}
                    className={s.newDatePicker}
                />
+               <Select value={newType} onChange={setNewType}>
+                   <Select.Option value="DEFAULT">Робота у класі</Select.Option>
+                   <Select.Option value="HOMEWORK">Домашнє завдання</Select.Option>
+               </Select>
                <Button onClick={addDate} disabled={!newDate}>Додати</Button>
            </div>
            <table className={s.journalTable}>
                <tr>
                    <th></th>
                    {dates?.map(date => (
-                       <th key={date}>{date}</th>
+                       <>
+                           {defaultDates.includes(date) && (
+                               <th key={date}></th>
+                           )}
+                           {homeworkDates.includes(date) && (
+                               <th key={date}>ДЗ</th>
+                           )}
+                       </>
+                   ))}
+               </tr>
+               <tr>
+                   <th></th>
+                   {dates?.map(date => (
+                       <>
+                            {defaultDates.includes(date) && (
+                               <th key={date}>{date}</th>
+                            )}
+                           {homeworkDates.includes(date) && (
+                               <th key={date}>{date}</th>
+                            )}
+                       </>
                    ))}
                </tr>
                {journalQuery.data?.getStudents.map(student => (
                   <tr key={student.id}>
                       <td>{student.firstName} {student.lastName}</td>
                       {dates?.map(date => (
-                          <td key={date}>
-                              <Mark marks={journalQuery.data?.getJournalMarks} date={date} student={student} subjectId={subjectId}/>
-                          </td>
+                         <>
+                             {defaultDates.includes(date) && (
+                                 <td key={date + 'DEFAULT'}>
+                                     <Mark
+                                         type="DEFAULT"
+                                         marks={journalQuery.data?.getJournalMarks}
+                                         date={date}
+                                         student={student}
+                                         subjectId={subjectId}
+                                     />
+                                 </td>
+                             )}
+                             {homeworkDates.includes(date) && (
+                                 <td key={date + 'HOMEWORK'}>
+                                     <Mark
+                                         type="HOMEWORK"
+                                         marks={journalQuery.data?.getJournalMarks}
+                                         date={date}
+                                         student={student}
+                                         subjectId={subjectId}
+                                     />
+                                 </td>
+                             )}
+                         </>
                       ))}
                   </tr>
                ))}

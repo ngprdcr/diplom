@@ -33,7 +33,7 @@ export const HomeworksUpdate = () => {
             variables: {
                 updateHomeworkInputType: {
                     id,
-                    mark,
+                    mark: mark ? +mark : null,
                     reviewResult,
                     status,
                 },
@@ -90,7 +90,7 @@ export const HomeworksUpdate = () => {
                 name="mark"
                 label="Оцінка"
             >
-                <Input placeholder="Оцінка"/>
+                <Input type="number" placeholder="Оцінка"/>
             </Form.Item>
             <Form.Item
                 name="reviewResult"

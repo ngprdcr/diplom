@@ -35,6 +35,7 @@ query ($subjectId: Guid!) {
   getJournalMarks(subjectId: $subjectId) {
     id
     mark
+    type
     date
     studentId
   }

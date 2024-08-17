@@ -5,14 +5,15 @@ import {useMutation} from "@apollo/client";
 import {setJournalMarkMutation} from "../../../../graphQL/modules/journal/journal.queries";
 
 type Props = {
+    type: 'DEFAULT' | 'HOMEWORK';
     marks: JournalMark[] | undefined;
     date: string;
     student: Student;
     subjectId: string;
 }
 
-export const Mark = ({marks, date, student, subjectId}: Props) => {
-    const journalMark = marks?.find(m => m.date === date && m.studentId === student.id);
+export const Mark = ({type, marks, date, student, subjectId}: Props) => {
+    const journalMark = marks?.find(m => m.date === date && m.studentId === student.id && m.type === type);
     const [mark, setMark] = useState(journalMark?.mark)
 
     const [setJournalMark] = useMutation(setJournalMarkMutation);
@@ -26,6 +27,7 @@ export const Mark = ({marks, date, student, subjectId}: Props) => {
                 input: {
                     id: journalMark?.id ?? null,
                     mark: newMark,
+                    type,
                     studentId: student.id,
                     subjectId,
                     date,

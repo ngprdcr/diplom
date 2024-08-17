@@ -23,7 +23,7 @@ export const CREATE_HOMEWORK_MUTATION = gql`
 export type UpdateHomeworkData = { updateHomework: Homework }
 
 export type UpdateHomeworkVars = { updateHomeworkInputType: updateHomeworkInputType, withFiles: boolean }
-export type updateHomeworkInputType = { id: string, mark: string, reviewResult: string, status: HomeworkStatus }
+export type updateHomeworkInputType = { id: string, mark: number | null, reviewResult: string, status: HomeworkStatus }
 
 export const UPDATE_HOMEWORK_MUTATION = gql`
     ${HOMEWORK_FRAGMENT}

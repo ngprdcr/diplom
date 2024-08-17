@@ -13,7 +13,12 @@ namespace EducationalPortal.Server.GraphQL.Modules.Homeworks
 {
     public class HomeworksMutations : ObjectGraphType, IMutationMarker
     {
-        public HomeworksMutations(IHomeworkRepository homeworkRepository, IHttpContextAccessor httpContextAccessor, CloudinaryService cloudinaryService, IFileRepository fileRepository)
+        public HomeworksMutations(
+            IHomeworkRepository homeworkRepository,
+            IHttpContextAccessor httpContextAccessor,
+            CloudinaryService cloudinaryService,
+            IFileRepository fileRepository,
+            IJournalMarkRepository journalMarkRepository)
         {
             Field<NonNullGraphType<HomeworkType>, HomeworkModel>()
                 .Name("CreateHomework")
@@ -27,7 +32,7 @@ namespace EducationalPortal.Server.GraphQL.Modules.Homeworks
                     await homeworkRepository.CreateAsync(homework);
                     if (createHomeworkInput.Files != null)
                     {
-                        foreach(var file in createHomeworkInput.Files)
+                        foreach (var file in createHomeworkInput.Files)
                         {
                             var fileUplaod = new FileModel
                             {
@@ -52,10 +57,37 @@ namespace EducationalPortal.Server.GraphQL.Modules.Homeworks
                     Guid currentTeacherId = httpContextAccessor.HttpContext.GetUserId();
                     UserRoleEnum currentTeacherRole = httpContextAccessor.HttpContext.GetRole();
                     HomeworkModel oldHomework = await homeworkRepository.GetByIdAsync(newHomework.Id, h => h.SubjectPost.Subject.TeachersHaveAccessCreatePosts);
-                    if (currentTeacherId != oldHomework.SubjectPost.Subject.TeacherId 
+
+                    if (currentTeacherId != oldHomework.SubjectPost.Subject.TeacherId
                         && !oldHomework.SubjectPost.Subject.TeachersHaveAccessCreatePosts.Any(t => t.Id == currentTeacherId)
                         && currentTeacherRole != UserRoleEnum.Administrator)
                         throw new Exception("Ви не маєте прав на редагування даної доманьої роботи");
+
+                    var journalMarks = await journalMarkRepository.GetOrDefaultAsync(m => m.StudentId == oldHomework.StudentId
+                        && m.SubjectId == oldHomework.SubjectPost.SubjectId
+                        && m.Date.Date == oldHomework.CreatedAt.Date
+                        && m.Type == JournalMarkKind.Homework);
+
+                    if (journalMarks.Count == 0)
+                    {
+                        var journalMark = new JournalMarkModel
+                        {
+                            Id = Guid.NewGuid(),
+                            Mark = newHomework.Mark,
+                            Type = JournalMarkKind.Homework,
+                            StudentId = oldHomework.StudentId.Value,
+                            SubjectId = oldHomework.SubjectPost.SubjectId.Value,
+                            Date = new DateTime(oldHomework.CreatedAt.Year, oldHomework.CreatedAt.Month, oldHomework.CreatedAt.Day),
+                        };
+                        await journalMarkRepository.CreateAsync(journalMark);
+                    }
+                    else
+                    {
+                        var journalMark = journalMarks[0];
+                        journalMark.Mark = newHomework.Mark;
+                        await journalMarkRepository.UpdateAsync(journalMark);
+                    }
+
                     return await homeworkRepository.UpdateAsync(newHomework);
                 })
                 .AuthorizeWith(AuthPolicies.Teacher);

@@ -17,18 +17,18 @@ namespace EducationalPortal.Server.GraphQL.Modules.Homeworks
                .Name("Text")
                .Resolve(context => context.Source.Text);
 
-            Field<StringGraphType, string?>()
+            Field<IntGraphType>()
                .Name("Mark")
                .Resolve(context => context.Source.Mark);
-            
+
             Field<StringGraphType, string?>()
                .Name("ReviewResult")
                .Resolve(context => context.Source.ReviewResult);
-            
+
             Field<HomeworkStatusType, HomeworkStatus>()
                .Name("Status")
                .Resolve(context => context.Source.Status);
-            
+
             Field<IdGraphType, Guid?>()
                .Name("SubjectPostId")
                .Resolve(context => context.Source.SubjectPostId);
@@ -41,7 +41,7 @@ namespace EducationalPortal.Server.GraphQL.Modules.Homeworks
                    var subjectPostRepository = scope.ServiceProvider.GetRequiredService<ISubjectPostRepository>();
                    return await subjectPostRepository.GetByIdAsync(context.Source.SubjectPostId);
                });
-            
+
             Field<IdGraphType, Guid?>()
                .Name("StudentId")
                .Resolve(context => context.Source.StudentId);

@@ -13,7 +13,7 @@ export enum HomeworkStatus {
 export type Homework = {
     id: string,
     text: string,
-    mark: string,
+    mark: number | null;
     reviewResult: string,
     status: HomeworkStatus,
     subjectPostId: string,

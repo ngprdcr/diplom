@@ -44,7 +44,16 @@ export const Journal = () => {
     }
 
     const disabledDate: RangePickerProps['disabledDate'] = (current) => {
-        return current && dates.includes(current.format('YYYY-MM-DD'));
+        if(!journalQuery.data)
+            return true;
+
+        if(!current)
+            return false;
+
+        const currentDate = current.format('YYYY-MM-DD');
+        return dates.includes(currentDate)
+            || currentDate < journalQuery.data.getSubject.educationalYear.dateStart
+            || currentDate > journalQuery.data.getSubject.educationalYear.dateEnd;
     };
 
     console.log(dates)
@@ -107,9 +116,9 @@ export const Journal = () => {
                    value={newDate}
                    onChange={value => setNewDate(value)}
                    disabledDate={disabledDate}
-                    className={s.newDatePicker}
+                   className={s.newDatePicker}
                />
-               <Button onClick={addDate}>Додати</Button>
+               <Button onClick={addDate} disabled={!newDate}>Додати</Button>
            </div>
            <table className={s.journalTable}>
                <tr>

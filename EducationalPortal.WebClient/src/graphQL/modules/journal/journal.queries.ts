@@ -20,6 +20,8 @@ export type GetJournalData = {
         educationalYearId: string;
         educationalYear: {
             name: string;
+            dateStart: string;
+            dateEnd: string;
         };
         gradesHaveAccessRead: {
             id: string;
@@ -57,6 +59,8 @@ query ($subjectId: Guid!) {
     educationalYearId
     educationalYear {
       name
+      dateStart
+      dateEnd
     }
     gradesHaveAccessRead {
       id

@@ -41,6 +41,7 @@ export const Mark = ({marks, date, student, subjectId}: Props) => {
             onChange={setMarkHandler}
             type="number"
             min="0"
+            max="100"
         />
     )
 }

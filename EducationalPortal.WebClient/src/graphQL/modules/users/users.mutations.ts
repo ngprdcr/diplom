@@ -16,6 +16,8 @@ export type createUserInputType = {
     dateOfBirth: string,
     role: Role,
     gradeId: string | undefined,
+    motherId?: string,
+    fatherId?: string,
 }
 
 export const CREATE_USER_MUTATION = gql`

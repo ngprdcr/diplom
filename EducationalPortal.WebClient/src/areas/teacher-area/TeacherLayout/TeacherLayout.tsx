@@ -29,6 +29,7 @@ import {TeachersIndex} from '../modules/users/pages/TeachersIndex/TeachersIndex'
 import {TeachersView} from '../modules/users/pages/TeachersView/TeachersView';
 import {TeachersCreate} from '../modules/users/pages/TeachersCreate/TeachersCreate';
 import {TeachersUpdate} from '../modules/users/pages/TeachersUpdate/TeachersUpdate';
+import {ParentsIndex} from '../modules/users/pages/ParentsIndex/ParentsIndex';
 import {WithAdministratorRoleOrRender} from '../../../hocs/WithAdministratorRoleOrRender';
 import s from './TeacherLayout.module.css';
 import {BackupsIndex} from "../modules/backups/pages/BackupsIndex/BackupsIndex";
@@ -36,6 +37,9 @@ import {HomeworksMyIndex} from "../modules/homeworks/pages/HomeworksMyIndex/Home
 import {SubjectPostsCreate} from "../modules/subjectPosts/components/SubjectPostsCreate/SubjectPostsCreate";
 import {SubjectPostsUpdate} from "../modules/subjectPosts/components/SubjectPostsUpdate/SubjectPostsUpdate";
 import {Journal} from "../modules/journal/Journal";
+import {ParentsCreate} from "../modules/users/pages/ParentsCreate/ParentsCreate";
+import {ParentsUpdate} from "../modules/users/pages/ParentsUpdate/ParentsUpdate";
+import { ParentsView } from '../modules/users/pages/ParentsView/ParentsView';
 
 const {Content} = Layout;
 
@@ -153,6 +157,22 @@ export const TeacherLayout: FC = () => {
                                 <Route path={'update/:id'} element={
                                     <WithAdministratorRoleOrRender render={<Error statusCode={403}/>}>
                                         <TeachersUpdate/>
+                                    </WithAdministratorRoleOrRender>
+                                }/>
+                                <Route path={'*'} element={<Error/>}/>
+                            </Route>
+
+                            <Route path={'parents/*'}>
+                                <Route index element={<ParentsIndex/>}/>
+                                <Route path={':id'} element={<ParentsView/>}/>
+                                <Route path={'create'} element={
+                                    <WithAdministratorRoleOrRender render={<Error statusCode={403}/>}>
+                                        <ParentsCreate/>
+                                    </WithAdministratorRoleOrRender>
+                                }/>
+                                <Route path={'update/:id'} element={
+                                    <WithAdministratorRoleOrRender render={<Error statusCode={403}/>}>
+                                        <ParentsUpdate/>
                                     </WithAdministratorRoleOrRender>
                                 }/>
                                 <Route path={'*'} element={<Error/>}/>

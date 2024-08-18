@@ -23,6 +23,7 @@ namespace EducationalPortal.Server.GraphQL.Modules.Auth
                     UserModel? user = await usersRepository.GetByLoginOrDefaultAsync(loginAuthInput.Login);
                     if (user == null || user.Password != loginAuthInput.Password)
                         throw new Exception("Не правильний логін або пароль");
+
                     return new AuthResponse()
                     {
                         Token = authService.GenerateAccessToken(user.Id, user.Login, user.Role),
@@ -52,7 +53,7 @@ namespace EducationalPortal.Server.GraphQL.Modules.Auth
                         User = user,
                     };
                 });
-            
+
             Field<BooleanGraphType, bool>()
                 .Name("ChangePassword")
                 .Argument<NonNullGraphType<ChangePasswordInputType>, ChangePassword>("ChangePasswordInputType", "Argument for change User password")
@@ -63,7 +64,7 @@ namespace EducationalPortal.Server.GraphQL.Modules.Auth
                     UserModel user = await usersRepository.GetByLoginAsync(userLogin);
                     if (user.Password != changePassword.OldPassword)
                         throw new Exception("Bad old password");
-                    if(changePassword.NewPassword.Length < 3)
+                    if (changePassword.NewPassword.Length < 3)
                         throw new Exception("Lenght of new password must be greater then 3 symbols");
                     user.Password = changePassword.NewPassword;
                     await usersRepository.UpdateAsync(user);

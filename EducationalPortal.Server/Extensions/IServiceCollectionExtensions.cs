@@ -77,6 +77,7 @@ namespace EducationalPortal.Server.Extensions
                 {
                     options.AddPolicy(AuthPolicies.Authenticated, p => p.RequireAuthenticatedUser());
                     options.AddPolicy(AuthPolicies.Student, p => p.RequireClaim(ClaimTypes.Role, UserRoleEnum.Student.ToString(), UserRoleEnum.Teacher.ToString(), UserRoleEnum.Administrator.ToString()));
+                    options.AddPolicy(AuthPolicies.Parent, p => p.RequireClaim(ClaimTypes.Role, UserRoleEnum.Parent.ToString(), UserRoleEnum.Administrator.ToString()));
                     options.AddPolicy(AuthPolicies.Teacher, p => p.RequireClaim(ClaimTypes.Role, UserRoleEnum.Teacher.ToString(), UserRoleEnum.Administrator.ToString()));
                     options.AddPolicy(AuthPolicies.Administrator, p => p.RequireClaim(ClaimTypes.Role, UserRoleEnum.Administrator.ToString()));
                 });

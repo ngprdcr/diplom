@@ -5,6 +5,7 @@ export enum Role {
     Student = 'STUDENT',
     Teacher = 'TEACHER',
     Administrator = 'ADMINISTRATOR',
+    Parent = 'PARENT',
 }
 
 export type User = {
@@ -18,6 +19,18 @@ export type User = {
     dateOfBirth: string,
     role: Role,
     gradeId: string,
+    motherId: string | null,
+    mother: {
+        firstName: string;
+        lastName: string;
+        middleName: string;
+    } | null,
+    fatherId: string | null,
+    father: {
+        firstName: string;
+        lastName: string;
+        middleName: string;
+    } | null,
     grade: Grade,
     subjects: getSubjectsType[],
     createdAt: string,

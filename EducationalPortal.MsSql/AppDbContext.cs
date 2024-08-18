@@ -24,7 +24,7 @@ namespace EducationalPortal.MsSql
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlServer(Environment.GetEnvironmentVariable("MS_SQL_DATABASE_URL") ?? @"Data Source=(localdb)\\mssqllocaldb;Initial Catalog=EducationPortal;Integrated Security=True;Connect Timeout=30;Encrypt=False;Trust Server Certificate=False;Application Intent=ReadWrite;Multi Subnet Failover=False",
+            optionsBuilder.UseSqlServer(Environment.GetEnvironmentVariable("MS_SQL_DATABASE_URL") ?? @"Data Source=(localdb)\\mssqllocaldb;Initial Catalog=EducationPortal;Integrated Security=True;Connect Timeout=30;Encrypt=False;Trust Server Certificate=False;Application Intent=ReadWrite;Multi Subnet Failover=False;MultipleActiveResultSets=true",
                 options => options.EnableRetryOnFailure());
         }
 
@@ -50,6 +50,8 @@ namespace EducationalPortal.MsSql
             builder.Entity<UserModel>(u => u.HasIndex(e => e.Email).IsUnique());
             builder.Entity<UserModel>().Property(u => u.Role).HasConversion(r => r.ToString(), r => (UserRoleEnum)Enum.Parse(typeof(UserRoleEnum), r));
             builder.Entity<UserModel>().HasOne(p => p.Grade).WithMany(g => g.Students).OnDelete(DeleteBehavior.SetNull);
+            builder.Entity<UserModel>().HasOne(p => p.Mother).WithMany().HasForeignKey(u => u.MotherId);
+            builder.Entity<UserModel>().HasOne(p => p.Father).WithMany().HasForeignKey(u => u.FatherId);
 
             base.OnModelCreating(builder);
         }

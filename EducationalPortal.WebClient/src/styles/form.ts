@@ -1,8 +1,9 @@
+import {FormLayout} from "antd/lib/form/Form";
+
 export const sizeFormItem = {
-    labelCol: {span: 2},
-    wrapperCol: {span: 30},
+    layout: 'vertical' as FormLayout
 };
 
 export const sizeButtonItem = {
-    wrapperCol: {offset: 2},
+    // wrapperCol: {offset: 2},
 };

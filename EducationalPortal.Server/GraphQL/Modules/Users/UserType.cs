@@ -18,23 +18,23 @@ namespace EducationalPortal.Server.GraphQL.Modules.Users
             Field<StringGraphType, string>()
                .Name("FirstName")
                .Resolve(context => context.Source.FirstName);
-            
+
             Field<StringGraphType, string>()
                .Name("LastName")
                .Resolve(context => context.Source.LastName);
-            
+
             Field<StringGraphType, string>()
                .Name("MiddleName")
                .Resolve(context => context.Source.MiddleName);
-            
+
             Field<NonNullGraphType<StringGraphType>, string>()
                .Name("Login")
                .Resolve(context => context.Source.Login);
-            
+
             Field<StringGraphType, string>()
                .Name("Email")
                .Resolve(context => context.Source.Email);
-            
+
             Field<StringGraphType, string>()
                .Name("PhoneNumber")
                .Resolve(context => context.Source.PhoneNumber);
@@ -50,7 +50,33 @@ namespace EducationalPortal.Server.GraphQL.Modules.Users
             Field<IdGraphType, Guid?>()
                .Name("GradeId")
                .Resolve(context => context.Source.GradeId);
-            
+
+            Field<IdGraphType, Guid?>()
+               .Name("MotherId")
+               .Resolve(context => context.Source.MotherId);
+
+            Field<UserType>()
+                .Name("Mother")
+                .ResolveAsync(async context =>
+                {
+                    using var scope = serviceProvider.CreateScope();
+                    var userRepository = scope.ServiceProvider.GetRequiredService<IUserRepository>();
+                    return await userRepository.GetByIdOrDefaultAsync(context.Source.MotherId);
+                });
+
+            Field<IdGraphType, Guid?>()
+               .Name("FatherId")
+               .Resolve(context => context.Source.FatherId);
+
+            Field<UserType>()
+                .Name("Father")
+                .ResolveAsync(async context =>
+                {
+                    using var scope = serviceProvider.CreateScope();
+                    var userRepository = scope.ServiceProvider.GetRequiredService<IUserRepository>();
+                    return await userRepository.GetByIdOrDefaultAsync(context.Source.FatherId);
+                });
+
             Field<GradeType, GradeModel?>()
                .Name("Grade")
                .ResolveAsync(async context =>

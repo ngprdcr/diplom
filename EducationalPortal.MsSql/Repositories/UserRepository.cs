@@ -28,7 +28,7 @@ namespace EducationalPortal.MsSql.Repositories
             await base.CreateAsync(entity);
             return entity;
         }
-        
+
         public override async Task<UserModel> UpdateAsync(UserModel newUser)
         {
             if (!string.IsNullOrEmpty(newUser.Email))
@@ -51,6 +51,8 @@ namespace EducationalPortal.MsSql.Repositories
             addedUser.DateOfBirth = newUser.DateOfBirth;
             addedUser.Role = newUser.Role;
             addedUser.GradeId = newUser.GradeId;
+            addedUser.MotherId = newUser.MotherId;
+            addedUser.FatherId = newUser.FatherId;
             await _context.SaveChangesAsync();
             return newUser;
         }
@@ -62,7 +64,7 @@ namespace EducationalPortal.MsSql.Repositories
                 throw new Exception("Користувач з введеним Логіном не існує");
             return user;
         }
-        
+
         public async Task<UserModel?> GetByLoginOrDefaultAsync(string login)
         {
             List<UserModel> users = await GetOrDefaultAsync(e => e.Login == login);

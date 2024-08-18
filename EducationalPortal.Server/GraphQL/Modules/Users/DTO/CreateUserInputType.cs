@@ -47,6 +47,14 @@ namespace EducationalPortal.Server.GraphQL.Modules.Users.DTO
             Field<IdGraphType, Guid?>()
                .Name("GradeId")
                .Resolve(context => context.Source.GradeId);
+
+            Field<IdGraphType, Guid?>()
+               .Name("MotherId")
+               .Resolve(context => context.Source.MotherId);
+
+            Field<IdGraphType, Guid?>()
+               .Name("FatherId")
+               .Resolve(context => context.Source.FatherId);
         }
     }
 }

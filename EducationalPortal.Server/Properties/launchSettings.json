@@ -21,7 +21,7 @@
         "BACKUPS_FOLDER_PATH": "D:\\Diplom\\Backups",
         "ATLAS_URI": "mongodb+srv://maingoose:maingoose@cluster0.4gamz.mongodb.net/?retryWrites=true&w=majority",
         "PG_PATH": "C:\\OpenServer\\modules\\database\\PostgreSQL-13.3-Win10\\bin",
-        "MS_SQL_DATABASE_URL": "Data Source=(localdb)\\mssqllocaldb;Initial Catalog=EducationPortal;Integrated Security=True;Connect Timeout=30;Encrypt=False;Trust Server Certificate=False;Application Intent=ReadWrite;Multi Subnet Failover=False"
+        "MS_SQL_DATABASE_URL": "Data Source=(localdb)\\mssqllocaldb;Initial Catalog=EducationPortal;Integrated Security=True;Connect Timeout=30;Encrypt=False;Trust Server Certificate=False;Application Intent=ReadWrite;Multi Subnet Failover=False;MultipleActiveResultSets=true"
       }
     },
     "IIS Express": {

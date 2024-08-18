@@ -5,5 +5,6 @@
         Student,
         Teacher,
         Administrator,
+        Parent,
     }
 }

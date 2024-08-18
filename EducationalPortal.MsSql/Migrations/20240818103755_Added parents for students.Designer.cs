@@ -4,6 +4,7 @@ using EducationalPortal.MsSql;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace EducationalPortal.MsSql.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240818103755_Added parents for students")]
+    partial class Addedparentsforstudents
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -476,8 +478,9 @@ namespace EducationalPortal.MsSql.Migrations
             modelBuilder.Entity("EducationalPortal.Business.Models.UserModel", b =>
                 {
                     b.HasOne("EducationalPortal.Business.Models.UserModel", "Father")
-                        .WithMany()
-                        .HasForeignKey("FatherId");
+                        .WithMany("FatherChildren")
+                        .HasForeignKey("FatherId")
+                        .OnDelete(DeleteBehavior.SetNull);
 
                     b.HasOne("EducationalPortal.Business.Models.GradeModel", "Grade")
                         .WithMany("Students")
@@ -485,8 +488,9 @@ namespace EducationalPortal.MsSql.Migrations
                         .OnDelete(DeleteBehavior.SetNull);
 
                     b.HasOne("EducationalPortal.Business.Models.UserModel", "Mother")
-                        .WithMany()
-                        .HasForeignKey("MotherId");
+                        .WithMany("MotherChildren")
+                        .HasForeignKey("MotherId")
+                        .OnDelete(DeleteBehavior.SetNull);
 
                     b.Navigation("Father");
 
@@ -552,7 +556,11 @@ namespace EducationalPortal.MsSql.Migrations
 
             modelBuilder.Entity("EducationalPortal.Business.Models.UserModel", b =>
                 {
+                    b.Navigation("FatherChildren");
+
                     b.Navigation("Homeworks");
+
+                    b.Navigation("MotherChildren");
 
                     b.Navigation("Subjects");
                 });

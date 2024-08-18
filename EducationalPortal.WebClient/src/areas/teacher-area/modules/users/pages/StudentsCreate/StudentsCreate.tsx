@@ -13,6 +13,7 @@ import {Role} from '../../../../../../graphQL/modules/users/users.types';
 import Title from 'antd/es/typography/Title';
 import {ukDateFormat} from '../../../../../../utils/formats';
 import 'moment/locale/uk';
+import {GET_USERS_QUERY, GetUsersData, GetUsersVars} from "../../../../../../graphQL/modules/users/users.queries";
 
 // @ts-ignore
 const cyrillicToTranslit = new CyrillicToTranslit({preset: 'uk'});
@@ -27,6 +28,8 @@ type FormValues = {
     phoneNumber: string,
     dateOfBirth: any,
     gradeName: string | null,
+    motherName: string | null,
+    fatherName: string | null,
 }
 
 export const StudentsCreate = () => {
@@ -35,6 +38,20 @@ export const StudentsCreate = () => {
         variables: {
             page: gradePage,
             like: '',
+        },
+    });
+    const getMotherQuery = useQuery<GetUsersData, GetUsersVars>(GET_USERS_QUERY, {
+        variables: {
+            page: 1,
+            like: '',
+            roles: [Role.Parent]
+        },
+    });
+    const getFatherQuery = useQuery<GetUsersData, GetUsersVars>(GET_USERS_QUERY, {
+        variables: {
+            page: 1,
+            like: '',
+            roles: [Role.Parent]
         },
     });
     const [createStudentMutation, createStudentMutationOption] = useMutation<CreateUserData, CreateUserVars>(CREATE_USER_MUTATION);
@@ -55,6 +72,8 @@ export const StudentsCreate = () => {
                     dateOfBirth: values.dateOfBirth && new Date(values.dateOfBirth._d.setHours(12)).toISOString(),
                     role: Role.Student,
                     gradeId: getGradeQuery.data?.getGrades.entities.find(grade => grade.name === values.gradeName)?.id,
+                    motherId: getMotherQuery.data?.getUsers.entities.find(m => `${m.firstName} ${m.middleName} ${m.lastName}` === values.motherName)?.id,
+                    fatherId: getFatherQuery.data?.getUsers.entities.find(f => `${f.firstName} ${f.middleName} ${f.lastName}` === values.fatherName)?.id,
                 },
             },
         })
@@ -96,6 +115,42 @@ export const StudentsCreate = () => {
 
     const debouncedSearchGradesHandler = useCallback(debounce(nextValue => onSearchGradesHandler(nextValue), 500), []);
     const searchGradesHandler = (value: string) => debouncedSearchGradesHandler(value);
+
+    const onSearchMotherHandler = async (value: string) => {
+        const response = await getMotherQuery.refetch({
+            page: 1,
+            like: value,
+            roles: [Role.Parent]
+        });
+        if (!response.errors) {
+            if (!response.data.getUsers.entities.length) {
+                message.warning('Батьків з даною назвою не знайдено');
+            }
+        } else {
+            response.errors?.forEach(error => message.error(error.message));
+        }
+    };
+
+    const debouncedSearchMotherHandler = useCallback(debounce(nextValue => onSearchMotherHandler(nextValue), 500), []);
+    const searchMotherHandler = (value: string) => debouncedSearchMotherHandler(value);
+
+    const onSearchFatherHandler = async (value: string) => {
+        const response = await getFatherQuery.refetch({
+            page: 1,
+            like: value,
+            roles: [Role.Parent]
+        });
+        if (!response.errors) {
+            if (!response.data.getUsers.entities.length) {
+                message.warning('Батьків з даною назвою не знайдено');
+            }
+        } else {
+            response.errors?.forEach(error => message.error(error.message));
+        }
+    };
+
+    const debouncedSearchFatherHandler = useCallback(debounce(nextValue => onSearchFatherHandler(nextValue), 500), []);
+    const searchFatherHandler = (value: string) => debouncedSearchFatherHandler(value);
 
     return (
         <Form
@@ -174,6 +229,36 @@ export const StudentsCreate = () => {
                         placeholder="Клас"
                         enterButton
                         loading={getGradeQuery.loading}
+                    />
+                </AutoComplete>
+            </Form.Item>
+            <Form.Item
+                name="motherName"
+                label="Мати"
+            >
+                <AutoComplete
+                    options={getMotherQuery.data?.getUsers.entities.map(mother => ({value: `${mother.firstName} ${mother.middleName} ${mother.lastName}`}))}
+                    onSearch={searchMotherHandler}
+                >
+                    <Search
+                        placeholder="Мати"
+                        enterButton
+                        loading={getMotherQuery.loading}
+                    />
+                </AutoComplete>
+            </Form.Item>
+            <Form.Item
+                name="fatherName"
+                label="Батько"
+            >
+                <AutoComplete
+                    options={getFatherQuery.data?.getUsers.entities.map(mother => ({value: `${mother.firstName} ${mother.middleName} ${mother.lastName}`}))}
+                    onSearch={searchFatherHandler}
+                >
+                    <Search
+                        placeholder="Батько"
+                        enterButton
+                        loading={getFatherQuery.loading}
                     />
                 </AutoComplete>
             </Form.Item>

@@ -18,8 +18,15 @@ namespace EducationalPortal.Business.Models
         public DateTime DateOfBirth { get; set; }
         public UserRoleEnum Role { get; set; }
 
+        public Guid? MotherId { get; set; }
+        public UserModel? Mother { get; set; }
+
+        public Guid? FatherId { get; set; }
+        public UserModel? Father { get; set; }
+
         public Guid? GradeId { get; set; }
         public virtual GradeModel? Grade { get; set; }
+
         public virtual List<SubjectModel>? Subjects { get; set; }
         public virtual List<SubjectModel>? SubjectHaveAccessCreatePosts { get; set; }
         public virtual List<HomeworkModel>? Homeworks { get; set; }

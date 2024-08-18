@@ -13,6 +13,18 @@ export const USER_FRAGMENT = gql`
         dateOfBirth
         role
         gradeId
+        motherId
+        mother{
+            firstName
+            lastName
+            middleName
+        }
+        fatherId
+        father{
+            firstName
+            lastName
+            middleName
+        }
         createdAt
         updatedAt
     }

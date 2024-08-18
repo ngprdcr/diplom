@@ -115,6 +115,9 @@ export const TeacherMenu: FC = () => {
                         <Menu.Item key="teachers" icon={<UserOutlined/>}>
                             <Link to={'teachers'}>Вчителі</Link>
                         </Menu.Item>
+                        <Menu.Item key="parents" icon={<UserOutlined/>}>
+                            <Link to={'parents'}>Батьки</Link>
+                        </Menu.Item>
                     </SubMenu>
                     <Menu.Item key="educational-years" icon={<ScheduleOutlined/>}>
                         <Link to={'educational-years'}>Навчальні роки</Link>

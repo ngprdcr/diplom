@@ -95,7 +95,7 @@ export const StudentsUpdate = () => {
                     login: values.login,
                     email: values.email,
                     phoneNumber: values.phoneNumber,
-                    dateOfBirth: new Date(values.dateOfBirth._d.setHours(12)).toISOString(),
+                    dateOfBirth: values.dateOfBirth && new Date(values.dateOfBirth._d.setHours(12)).toISOString(),
                     role: Role.Student,
                     gradeId: gradeId,
                     motherId,

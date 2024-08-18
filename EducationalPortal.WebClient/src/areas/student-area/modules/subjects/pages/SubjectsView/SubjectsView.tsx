@@ -11,6 +11,7 @@ import {
     GetSubjectWithPostsVars,
 } from '../../../../../../graphQL/modules/subjects/subjects.queries';
 import {SubjectPostsIndex} from '../../../subjectPosts/components/SubjectPostsIndex/SubjectPostsIndex';
+import {isParent} from "../../../../../../utils/permissions";
 
 export const SubjectsView = () => {
     const params = useParams();
@@ -72,6 +73,7 @@ export const SubjectsView = () => {
                     subject={subject}
                     postsPage={postsPage}
                     setPostsPage={setPostsPage}
+                    hideSendHomeworkButton={isParent()}
                 />}
         </Space>
     );

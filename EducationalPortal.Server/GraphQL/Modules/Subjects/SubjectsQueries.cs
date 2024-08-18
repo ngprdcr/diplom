@@ -59,8 +59,27 @@ namespace EducationalPortal.Server.GraphQL.Modules.Subjects
                                 s => s.GradesHaveAccessRead.Any(g => g.Id == currentUser.GradeId)
                                 && s.Name.ToLower().Contains(like.ToLower())
                                 && s.EducationalYearId == currentEducationalYear.Id,
-                                s => s.GradesHaveAccessRead
-                            );
+                                s => s.GradesHaveAccessRead);
+                        case UserRoleEnum.Parent:
+                            var children = await userRepository.GetOrDefaultAsync(u => u.MotherId == currentUserId || u.FatherId == currentUserId);
+
+                            var subjects = new GetEntitiesResponse<SubjectModel>();
+
+                            foreach (var child in children)
+                            {
+                                var childSubjects = await subjectRepository.WhereOrDefaultAsync(s => s.CreatedAt, Order.Descend, page,
+                                    s => s.GradesHaveAccessRead.Any(g => g.Id == child.GradeId)
+                                    && s.Name.ToLower().Contains(like.ToLower())
+                                    && s.EducationalYearId == currentEducationalYear.Id,
+                                    s => s.GradesHaveAccessRead);
+
+                                foreach (var childSubject in childSubjects.Entities)
+                                    subjects.Entities = subjects.Entities.Append(childSubject);
+
+                                subjects.Total += childSubjects.Total;
+                            }
+
+                            return subjects;
                         case UserRoleEnum.Teacher:
                         case UserRoleEnum.Administrator:
                             return await subjectRepository.WhereOrDefaultAsync(s => s.CreatedAt, Order.Descend, page,

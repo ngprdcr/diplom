@@ -12,10 +12,11 @@ import {HomeworksCreate} from '../../../homeworks/components/HomeworksCreate/Hom
 type Props = {
     subject: Subject,
     postsPage: number,
-    setPostsPage: (page: number) => void,
+    setPostsPage: (page: number) => void
+    hideSendHomeworkButton?: boolean;
 };
 
-export const SubjectPostsIndex: FC<Props> = ({subject, postsPage, setPostsPage}) => {
+export const SubjectPostsIndex: FC<Props> = ({subject, postsPage, setPostsPage, hideSendHomeworkButton}) => {
     const [createHomeworkForSubjectPost, setCreateHomeworkForSubjectPost] = useState<SubjectPost | null>(null);
     const [createHomeworkForSubjectPostFormVisible, setCreateHomeworkForSubjectPostFormVisible] = useState(false);
 
@@ -38,7 +39,7 @@ export const SubjectPostsIndex: FC<Props> = ({subject, postsPage, setPostsPage})
                             </Space>
                         }
                         extra={
-                            post.type === SubjectPostType.Homework &&
+                            !hideSendHomeworkButton && post.type === SubjectPostType.Homework &&
                             <Button onClick={() => {
                                 setCreateHomeworkForSubjectPostFormVisible(true);
                                 setCreateHomeworkForSubjectPost(post);

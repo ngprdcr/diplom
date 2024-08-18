@@ -41,7 +41,7 @@ export const ParentsCreate = () => {
                     password: values.password,
                     email: values.email,
                     phoneNumber: values.phoneNumber,
-                    dateOfBirth: new Date(values.dateOfBirth._d.setHours(12)).toISOString(),
+                    dateOfBirth: values.dateOfBirth && new Date(values.dateOfBirth._d.setHours(12)).toISOString(),
                     role: Role.Parent,
                     gradeId: undefined,
                 },

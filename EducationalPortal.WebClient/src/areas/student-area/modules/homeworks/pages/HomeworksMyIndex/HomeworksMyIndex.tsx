@@ -20,6 +20,7 @@ import {
     RemoveHomeworkData,
     RemoveHomeworkVars
 } from "../../../../../../graphQL/modules/homeworks/homeworks.mutations";
+import {isParent} from "../../../../../../utils/permissions";
 
 export const HomeworksMyIndex = () => {
     const [searchParams, setSearchParams] = useSearchParams();
@@ -102,7 +103,7 @@ export const HomeworksMyIndex = () => {
             key: 'actions',
             width: '130px',
             render: (text, homework) => (
-                <ButtonsVUR viewUrl={`../${homework.id}`} onRemove={() => onRemove(homework?.id)}/>
+                <ButtonsVUR viewUrl={`../${homework.id}`} onRemove={isParent() ? undefined : () => onRemove(homework?.id)}/>
             ),
         },
     ];

@@ -12,7 +12,12 @@ namespace EducationalPortal.Server.GraphQL.Modules.Homeworks
 {
     public class HomeworksQueries : ObjectGraphType, IQueryMarker
     {
-        public HomeworksQueries(IHomeworkRepository homeworkRepository, IHttpContextAccessor httpContextAccessor, IEducationalYearRepository educationalYearRepository, ISubjectPostRepository subjectPostRepository)
+        public HomeworksQueries(
+            IHomeworkRepository homeworkRepository,
+            IHttpContextAccessor httpContextAccessor,
+            IEducationalYearRepository educationalYearRepository,
+            ISubjectPostRepository subjectPostRepository,
+            IUserRepository userRepository)
         {
             Field<NonNullGraphType<HomeworkType>, HomeworkModel>()
                 .Name("GetHomework")
@@ -34,7 +39,7 @@ namespace EducationalPortal.Server.GraphQL.Modules.Homeworks
                     int page = context.GetArgument<int>("Page");
                     List<HomeworkStatus>? statuses = context.GetArgument<List<HomeworkStatus>?>("Statuses");
                     Order order = context.GetArgument<Order>("Order");
-                    return await homeworkRepository.WhereAsync(s => s.CreatedAt, order, page, 
+                    return await homeworkRepository.WhereAsync(s => s.CreatedAt, order, page,
                         s => (statuses == null || statuses.Count == 0) ? true : statuses.Contains(s.Status)
                     );
                 })
@@ -58,6 +63,13 @@ namespace EducationalPortal.Server.GraphQL.Modules.Homeworks
                             return await homeworkRepository.WhereAsync(s => s.CreatedAt, order, page,
                                 h => ((statuses == null || statuses.Count == 0) ? true : statuses.Contains(h.Status))
                                 && h.StudentId == currentUserId);
+                        case UserRoleEnum.Parent:
+                            var children = await userRepository.GetOrDefaultAsync(u => u.MotherId == currentUserId || u.FatherId == currentUserId);
+                            var childrenIds = children.Select(c => c.Id);
+
+                            return await homeworkRepository.WhereAsync(s => s.CreatedAt, order, page,
+                                h => ((statuses == null || statuses.Count == 0) ? true : statuses.Contains(h.Status))
+                                && (h.StudentId.HasValue ? childrenIds.Contains(h.StudentId.Value) : false));
                         case UserRoleEnum.Teacher:
                         case UserRoleEnum.Administrator:
                             EducationalYearModel currentEducationalYear = await educationalYearRepository.GetCurrentAsync();

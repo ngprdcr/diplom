@@ -62,7 +62,7 @@ export const App = () => {
                 </WithStudentRoleOrRender>
             }/>
             <Route path="/*" element={isAuth
-                ? me?.user.role === Role.Student
+                ? me?.user.role === Role.Student || me?.user.role === Role.Parent
                     ? <StudentLayout/>
                     : <TeacherLayout/>
                 : <Navigate to={'/login'}/>}/>

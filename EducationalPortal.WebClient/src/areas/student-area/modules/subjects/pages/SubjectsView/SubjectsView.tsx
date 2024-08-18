@@ -1,8 +1,8 @@
 import React, {useState} from 'react';
 import {useQuery} from '@apollo/client';
-import {Navigate, useParams} from 'react-router-dom';
+import {Link, Navigate, useParams} from 'react-router-dom';
 import {Loading} from '../../../../../../components/Loading/Loading';
-import {Space, Tag} from 'antd';
+import {Button, Space, Tag} from 'antd';
 import Title from 'antd/es/typography/Title';
 import '../../../../../../styles/table.css';
 import {
@@ -12,6 +12,7 @@ import {
 } from '../../../../../../graphQL/modules/subjects/subjects.queries';
 import {SubjectPostsIndex} from '../../../subjectPosts/components/SubjectPostsIndex/SubjectPostsIndex';
 import {isParent} from "../../../../../../utils/permissions";
+import {ButtonsVUR} from "../../../../../../components/ButtonsVUD/ButtonsVUR";
 
 export const SubjectsView = () => {
     const params = useParams();
@@ -31,7 +32,12 @@ export const SubjectsView = () => {
     return (
         <Space direction={'vertical'} size={20} style={{width: '100%'}}>
             <Title level={2}>Перегляд предмету</Title>
-            <Title level={3}>{subject?.name}</Title>
+            <Space align={'center'}>
+                <Title level={3}>{subject?.name}</Title>
+                <Link to="journal">
+                    <Button type={'primary'} htmlType={'button'}>Журнал</Button>
+                </Link>
+            </Space>
             <table className="infoTable">
                 <tbody>
                 <tr>

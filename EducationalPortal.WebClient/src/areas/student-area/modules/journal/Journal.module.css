@@ -1,0 +1,11 @@
+.journalTable, .journalTable th, .journalTable td {
+    border: 1px solid black;
+}
+
+.journalTable th, .journalTable td{
+    padding: 2px 4px;
+}
+
+.mark {
+    text-align: center;
+}

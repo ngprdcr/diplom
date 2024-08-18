@@ -10,6 +10,7 @@ import {SubjectsView} from '../modules/subjects/pages/SubjectsView/SubjectsView'
 import {Settings} from "../modules/Settings/Settings";
 import {HomeworksMyIndex} from "../modules/homeworks/pages/HomeworksMyIndex/HomeworksMyIndex";
 import {HomeworksView} from "../modules/homeworks/pages/HomeworksView/HomeworksView";
+import {Journal} from "../modules/journal/Journal";
 
 const {Content} = Layout;
 
@@ -25,6 +26,7 @@ export const StudentLayout: FC = () => {
                             <Route path={'subjects/*'}>
                                 <Route path={'my'} element={<SubjectsMyIndex/>}/>
                                 <Route path={':id'} element={<SubjectsView/>}/>
+                                <Route path={':id/journal'} element={<Journal/>}/>
                                 <Route path={'*'} element={<Error/>}/>
                             </Route>
                             <Route path={'homeworks/*'}>

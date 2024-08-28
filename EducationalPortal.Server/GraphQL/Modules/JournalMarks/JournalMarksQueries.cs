@@ -12,7 +12,7 @@ namespace EducationalPortal.Server.GraphQL.Modules.Users
     {
         public JournalMarksQueries(IServiceProvider serviceProvider, IHttpContextAccessor httpContextAccessor)
         {
-            Field<NonNullGraphType<ListGraphType<NonNullGraphType<JournalMarksType>>>>()
+            Field<NonNullGraphType<ListGraphType<NonNullGraphType<JournalMarkType>>>>()
                 .Name("GetJournalMarks")
                 .Argument<NonNullGraphType<GuidGraphType>>("SubjectId", "")
                 .ResolveAsync(async context =>
@@ -26,8 +26,8 @@ namespace EducationalPortal.Server.GraphQL.Modules.Users
                 })
                 .AuthorizeWith(AuthPolicies.Teacher);
 
-            Field<NonNullGraphType<ListGraphType<NonNullGraphType<JournalMarksType>>>>()
-                .Name("GetMyJournalMarks")
+            Field<NonNullGraphType<JournalMarkGroupType>>()
+                .Name("GetMyJournalMarkGroup")
                 .Argument<NonNullGraphType<GuidGraphType>>("SubjectId", "")
                 .ResolveAsync(async context =>
                 {
@@ -46,7 +46,15 @@ namespace EducationalPortal.Server.GraphQL.Modules.Users
                         if (children.Count == 0)
                             return Array.Empty<JournalMarkModel>();
 
-                        return await journalMarkRepository.GetOrDefaultAsync(u => u.SubjectId == subjectId && u.StudentId == children[0].Id);
+                        IEnumerable<JournalMarkModel> journalMarks = new List<JournalMarkModel>();
+
+                        foreach (var child in children)
+                        {
+                            var marks = await journalMarkRepository.GetOrDefaultAsync(u => u.SubjectId == subjectId && u.StudentId == child.Id);
+                            journalMarks = journalMarks.Concat(marks);
+                        }
+
+                        return new JournalMarkGroupSource(children, journalMarks.ToList());
                     }
 
                     return await journalMarkRepository.GetOrDefaultAsync(u => u.SubjectId == subjectId && u.StudentId == currentUserId);

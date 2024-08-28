@@ -79,6 +79,8 @@ namespace EducationalPortal.Server.GraphQL.Modules.Subjects
                                 subjects.Total += childSubjects.Total;
                             }
 
+                            subjects.Entities = subjects.Entities.GroupBy(s => s.Id).Select(g => g.First());
+
                             return subjects;
                         case UserRoleEnum.Teacher:
                         case UserRoleEnum.Administrator:

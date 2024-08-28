@@ -23,10 +23,10 @@ export const Journal = () => {
     const [dates, setDates] = useState<string[]>([]);
 
     useEffect(() => {
-        if(!journalQuery.data?.getMyJournalMarks)
+        if(!journalQuery.data?.getMyJournalMarkGroup)
             return;
 
-        const defaultDates = journalQuery.data?.getMyJournalMarks
+        const defaultDates = journalQuery.data?.getMyJournalMarkGroup.journalMarks
             ?.filter(m => m.type == 'DEFAULT')
             ?.map(m => m.date)
             .filter((value, index, array) => array.indexOf(value) === index)
@@ -34,7 +34,7 @@ export const Journal = () => {
         defaultDates?.sort();
         setDefaultDates(defaultDates)
 
-        const homeworkDates = journalQuery.data?.getMyJournalMarks
+        const homeworkDates = journalQuery.data?.getMyJournalMarkGroup.journalMarks
             ?.filter(m => m.type == 'HOMEWORK')
             ?.map(m => m.date)
             .filter((value, index, array) => array.indexOf(value) === index)
@@ -104,55 +104,60 @@ export const Journal = () => {
             </table>
            <table className={s.journalTable}>
                <tr>
+                   <th></th>
                    {dates?.map(date => (
                        <>
                            {defaultDates.includes(date) && (
-                               <th key={date}></th>
+                               <th key={date + 'DEFAULT'}></th>
                            )}
                            {homeworkDates.includes(date) && (
-                               <th key={date}>ДЗ</th>
+                               <th key={date + 'HOMEWORK'}>ДЗ</th>
                            )}
                        </>
                    ))}
                </tr>
                <tr>
+                   <th></th>
                    {dates?.map(date => (
                        <>
                             {defaultDates.includes(date) && (
-                               <th key={date}>{date}</th>
+                               <th key={date + 'DEFAULT'}>{date}</th>
                             )}
                            {homeworkDates.includes(date) && (
-                               <th key={date}>{date}</th>
+                               <th key={date + 'HOMEWORK'}>{date}</th>
                             )}
                        </>
                    ))}
                </tr>
-              <tr>
-                  {dates?.map(date => (
-                     <>
-                         {defaultDates.includes(date) && (
-                             <td key={date + 'DEFAULT'}>
-                                 <Mark
-                                     type="DEFAULT"
-                                     marks={journalQuery.data?.getMyJournalMarks}
-                                     date={date}
-                                     subjectId={subjectId}
-                                 />
-                             </td>
-                         )}
-                         {homeworkDates.includes(date) && (
-                             <td key={date + 'HOMEWORK'}>
-                                 <Mark
-                                     type="HOMEWORK"
-                                     marks={journalQuery.data?.getMyJournalMarks}
-                                     date={date}
-                                     subjectId={subjectId}
-                                 />
-                             </td>
-                         )}
-                     </>
-                  ))}
-              </tr>
+               {journalQuery.data?.getMyJournalMarkGroup.children.map(student => (
+                   <tr key={student.id}>
+                       <td>{student.firstName} {student.lastName}</td>
+                       {dates?.map(date => (
+                           <>
+                               {defaultDates.includes(date) && (
+                                   <td key={date + 'DEFAULT'}>
+                                       <Mark
+                                           type="DEFAULT"
+                                           marks={journalQuery.data?.getMyJournalMarkGroup.journalMarks}
+                                           date={date}
+                                           student={student}
+                                       />
+                                   </td>
+                               )}
+                               {homeworkDates.includes(date) && (
+                                   <td key={date + 'HOMEWORK'}>
+                                       <Mark
+                                           type="HOMEWORK"
+                                           marks={journalQuery.data?.getMyJournalMarkGroup.journalMarks}
+                                           date={date}
+                                           student={student}
+                                       />
+                                   </td>
+                               )}
+                           </>
+                       ))}
+                   </tr>
+               ))}
            </table>
         </div>
     );

@@ -4,9 +4,9 @@ using GraphQL.Types;
 
 namespace EducationalPortal.Server.GraphQL.Modules.Users
 {
-    public class JournalMarksType : BaseType<JournalMarkModel>
+    public class JournalMarkType : BaseType<JournalMarkModel>
     {
-        public JournalMarksType(IServiceProvider serviceProvider) : base()
+        public JournalMarkType(IServiceProvider serviceProvider) : base()
         {
             Field<IntGraphType>()
                .Name("Mark")

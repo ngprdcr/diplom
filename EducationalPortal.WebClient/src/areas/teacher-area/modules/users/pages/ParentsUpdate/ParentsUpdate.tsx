@@ -55,7 +55,7 @@ export const ParentsUpdate = () => {
                     email: values.email,
                     phoneNumber: values.phoneNumber,
                     dateOfBirth: values.dateOfBirth && new Date(values.dateOfBirth._d.setHours(12)).toISOString(),
-                    role: values.role,
+                    role: getTeacher.data!.getUser.role,
                     gradeId: undefined,
                 },
             },
@@ -103,7 +103,6 @@ export const ParentsUpdate = () => {
                 email: teacher?.email,
                 phoneNumber: teacher?.phoneNumber,
                 dateOfBirth: moment(teacher?.dateOfBirth.split('T')[0], 'YYYY-MM-DD'),
-                role: teacher?.role,
             }}
             {...sizeFormItem}
         >
@@ -157,22 +156,6 @@ export const ParentsUpdate = () => {
                 label="Дата народження"
             >
                 <DatePicker format={ukDateFormat} onChange={() => changeLogin()}/>
-            </Form.Item>
-            <Form.Item
-                name="role"
-                label="Роль"
-            >
-                <Select>
-                    {(Object.values(Role) as Array<Role>).map(value => {
-                        if (value === Role.Student)
-                            return null;
-                        return (
-                            <Select.Option key={value} value={value}>
-                                {Object.keys(Role)[Object.values(Role).indexOf(value)]}
-                            </Select.Option>
-                        );
-                    })}
-                </Select>
             </Form.Item>
             <Form.Item {...sizeButtonItem}>
                 <ButtonUpdate loading={updateStudentOptions.loading} isSubmit={true}/>

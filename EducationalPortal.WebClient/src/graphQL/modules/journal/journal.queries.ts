@@ -31,7 +31,10 @@ export type GetJournalData = {
 }
 
 export type GetStudentJournalData = {
-    getMyJournalMarks: JournalMark[];
+    getMyJournalMarkGroup: {
+        children: Student[];
+        journalMarks: JournalMark[]
+    };
     getSubject: {
         name: string;
         link: string | null;
@@ -107,12 +110,19 @@ export const setJournalMarkMutation = gql`
 
 export const getStudentJournal = gql`
 query ($subjectId: Guid!) {
-  getMyJournalMarks(subjectId: $subjectId) {
-    id
-    mark
-    type
-    date
-    studentId
+  getMyJournalMarkGroup(subjectId: $subjectId) {
+    children {
+      id
+      firstName
+      lastName
+    }
+    journalMarks {
+      id
+      mark
+      type
+      date
+      studentId
+    }
   }
   getSubject(id: $subjectId) {
     name

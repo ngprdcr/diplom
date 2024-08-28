@@ -1,3 +1,7 @@
+.journalTable {
+    margin: 10px 0;
+}
+
 .journalTable, .journalTable th, .journalTable td {
     border: 1px solid black;
 }

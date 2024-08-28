@@ -8,10 +8,17 @@ import { getStudentJournal, GetStudentJournalData} from "../../../../graphQL/mod
 import {Moment} from "moment";
 import {RangePickerProps} from "antd/es/date-picker";
 import Title from "antd/es/typography/Title";
+import moment from "moment/moment";
 
 export const Journal = () => {
     const params = useParams();
     const subjectId = params.id as string;
+
+    const date = new Date();
+    const currentMonthFirstDay = new Date(date.getFullYear(), date.getMonth(), 1);
+    const currentMonthLastDay = new Date(date.getFullYear(), date.getMonth() + 1, 0);
+
+    const [showRange, setShowRange] = useState<[Moment | null, Moment | null] | null>([moment(currentMonthFirstDay), moment(currentMonthLastDay)]);
 
     const journalQuery = useQuery<GetStudentJournalData>(getStudentJournal, {
         variables: {subjectId},
@@ -27,7 +34,7 @@ export const Journal = () => {
             return;
 
         const defaultDates = journalQuery.data?.getMyJournalMarkGroup.journalMarks
-            ?.filter(m => m.type == 'DEFAULT')
+            ?.filter(m =>  m.type == 'DEFAULT' && (!showRange?.[0] || !showRange?.[1] || (moment(m.date) >= showRange[0]! && moment(m.date) <= showRange[1]!)))
             ?.map(m => m.date)
             .filter((value, index, array) => array.indexOf(value) === index)
 
@@ -35,7 +42,7 @@ export const Journal = () => {
         setDefaultDates(defaultDates)
 
         const homeworkDates = journalQuery.data?.getMyJournalMarkGroup.journalMarks
-            ?.filter(m => m.type == 'HOMEWORK')
+            ?.filter(m => m.type == 'HOMEWORK' && (!showRange?.[0] || !showRange?.[1] || (moment(m.date) >= showRange[0]! && moment(m.date) <= showRange[1]!)))
             ?.map(m => m.date)
             .filter((value, index, array) => array.indexOf(value) === index)
 
@@ -46,7 +53,7 @@ export const Journal = () => {
 
         newDates?.sort();
         setDates(newDates)
-    }, [journalQuery.data]);
+    }, [journalQuery.data, showRange]);
 
     const subject= journalQuery.data?.getSubject;
 
@@ -102,6 +109,11 @@ export const Journal = () => {
                 </tr>
                 </tbody>
             </table>
+            <DatePicker.RangePicker
+                value={showRange}
+                className={s.rangePicker}
+                onChange={values => setShowRange([values?.[0]?.startOf('day') ?? null, values?.[1]?.startOf('day') ?? null])}
+            />
            <table className={s.journalTable}>
                <tr>
                    <th></th>

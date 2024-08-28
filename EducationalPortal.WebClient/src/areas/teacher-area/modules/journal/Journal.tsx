@@ -1,6 +1,6 @@
 import s from './Journal.module.css';
 import {Link, useParams} from "react-router-dom";
-import {Button, DatePicker, Input, Select, Tag} from "antd";
+import {Button, DatePicker, Select, Tag} from "antd";
 import React, { useEffect, useState} from "react";
 import {Mark} from "./Mark";
 import {useQuery} from "@apollo/client";
@@ -8,7 +8,7 @@ import {
     getJournal,
     GetJournalData,
 } from "../../../../graphQL/modules/journal/journal.queries";
-import {Moment} from "moment";
+import moment, {Moment} from "moment";
 import {RangePickerProps} from "antd/es/date-picker";
 import Title from "antd/es/typography/Title";
 
@@ -16,6 +16,11 @@ export const Journal = () => {
     const params = useParams();
     const subjectId = params.subjectId as string;
 
+    const date = new Date();
+    const currentMonthFirstDay = new Date(date.getFullYear(), date.getMonth(), 1);
+    const currentMonthLastDay = new Date(date.getFullYear(), date.getMonth() + 1, 0);
+
+    const [showRange, setShowRange] = useState<[Moment | null, Moment | null] | null>([moment(currentMonthFirstDay), moment(currentMonthLastDay)]);
     const [newDate, setNewDate] = useState<Moment | null>(null);
     const [newType, setNewType] = useState<'DEFAULT' | 'HOMEWORK'>('DEFAULT');
 
@@ -33,7 +38,7 @@ export const Journal = () => {
             return;
 
         const defaultDates = journalQuery.data?.getJournalMarks
-            ?.filter(m => m.type == 'DEFAULT')
+            ?.filter(m =>  m.type == 'DEFAULT' && (!showRange?.[0] || !showRange?.[1] || (moment(m.date) >= showRange[0]! && moment(m.date) <= showRange[1]!)))
             ?.map(m => m.date)
             .filter((value, index, array) => array.indexOf(value) === index)
 
@@ -41,7 +46,7 @@ export const Journal = () => {
         setDefaultDates(defaultDates)
 
         const homeworkDates = journalQuery.data?.getJournalMarks
-            ?.filter(m => m.type == 'HOMEWORK')
+            ?.filter(m => m.type == 'HOMEWORK' && (!showRange?.[0] || !showRange?.[1] || (moment(m.date) >= showRange[0]! && moment(m.date) <= showRange[1]!)))
             ?.map(m => m.date)
             .filter((value, index, array) => array.indexOf(value) === index)
 
@@ -52,7 +57,7 @@ export const Journal = () => {
 
         newDates?.sort();
         setDates(newDates)
-    }, [journalQuery.data]);
+    }, [journalQuery.data, showRange]);
 
 
     const addDate = () => {
@@ -150,29 +155,21 @@ export const Journal = () => {
                 </tr>
                 </tbody>
             </table>
-           <div className={s.newDateForm}>
-               <DatePicker
-                   value={newDate}
-                   onChange={value => setNewDate(value)}
-                   disabledDate={disabledDate}
-                   className={s.newDatePicker}
-               />
-               <Select value={newType} onChange={setNewType}>
-                   <Select.Option value="DEFAULT">Робота у класі</Select.Option>
-                   <Select.Option value="HOMEWORK">Домашнє завдання</Select.Option>
-               </Select>
-               <Button onClick={addDate} disabled={!newDate}>Додати</Button>
-           </div>
+            <DatePicker.RangePicker
+                value={showRange}
+                className={s.rangePicker}
+                onChange={values => setShowRange([values?.[0]?.startOf('day') ?? null, values?.[1]?.startOf('day') ?? null])}
+            />
            <table className={s.journalTable}>
                <tr>
                    <th></th>
                    {dates?.map(date => (
                        <>
                            {defaultDates.includes(date) && (
-                               <th key={date}></th>
+                               <th key={date + 'DEFAULT'}></th>
                            )}
                            {homeworkDates.includes(date) && (
-                               <th key={date}>ДЗ</th>
+                               <th key={date + 'HOMEWORK'}>ДЗ</th>
                            )}
                        </>
                    ))}
@@ -182,10 +179,10 @@ export const Journal = () => {
                    {dates?.map(date => (
                        <>
                             {defaultDates.includes(date) && (
-                               <th key={date}>{date}</th>
+                               <th key={date + 'DEFAULT'}>{date}</th>
                             )}
                            {homeworkDates.includes(date) && (
-                               <th key={date}>{date}</th>
+                               <th key={date + 'HOMEWORK'}>{date}</th>
                             )}
                        </>
                    ))}
@@ -222,6 +219,19 @@ export const Journal = () => {
                   </tr>
                ))}
            </table>
+            <div className={s.newDateForm}>
+                <DatePicker
+                    value={newDate}
+                    onChange={value => setNewDate(value)}
+                    disabledDate={disabledDate}
+                    className={s.newDatePicker}
+                />
+                <Select value={newType} onChange={setNewType}>
+                    <Select.Option value="DEFAULT">Робота у класі</Select.Option>
+                    <Select.Option value="HOMEWORK">Домашнє завдання</Select.Option>
+                </Select>
+                <Button onClick={addDate} disabled={!newDate}>Додати</Button>
+            </div>
         </div>
     );
 };

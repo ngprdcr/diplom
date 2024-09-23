@@ -68,7 +68,7 @@ export const SubjectsView = () => {
             <Title level={2}>Перегляд предмету</Title>
             <Space align={'center'}>
                 <Title level={3}>{subject?.name}</Title>
-                {subject.teacherId === currentUser?.id && (
+                {(subject.teacherId === currentUser?.id || subject.teachersHaveAccessCreatePosts.some(u => u.id === currentUser?.id)) && (
                     <>
                         <ButtonsVUR updateUrl={`../update/${subject?.id}`} onRemove={() => onRemove(subject?.id)}/>
                         <Link to="journal">

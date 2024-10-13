@@ -85,11 +85,12 @@ export const TeacherMenu: FC = () => {
                     {me?.user?.role && roleToTag(me.user.role)}
                 </Col>
             </Row>
-            <Menu theme="dark" defaultSelectedKeys={[getDefaultSelectedKey()]} defaultOpenKeys={getDefaultOpenKeys()}
-                  mode="inline">
-                <Menu.Item key="/" icon={<LineChartOutlined/>}>
-                    <Link to={'./'}>Головна</Link>
-                </Menu.Item>
+            <Menu
+                theme="dark"
+                defaultSelectedKeys={[getDefaultSelectedKey()]}
+                defaultOpenKeys={getDefaultOpenKeys()}
+                mode="inline"
+            >
                 <Menu.Item key="subjects/my" icon={<BookOutlined/>}>
                     <Link to={'subjects/my'}>Мої предмети</Link>
                 </Menu.Item>
@@ -131,14 +132,12 @@ export const TeacherMenu: FC = () => {
                         <Menu.Item key="settings/site" icon={<SettingOutlined/>}>
                             <Link to={'settings/site'}>Сайту</Link>
                         </Menu.Item>
+                        <Menu.Item key="backups" icon={<SlidersOutlined/>}>
+                            <Link to={'backups'}>Бекапи</Link>
+                        </Menu.Item>
                     </SubMenu>
                     : <Menu.Item key="settings/my" icon={<SettingOutlined/>}>
                         <Link to={'settings/my'}>Налаштування</Link>
-                    </Menu.Item>
-                }
-                {isAdministrator() &&
-                    <Menu.Item key="backups" icon={<SlidersOutlined/>}>
-                        <Link to={'backups'}>Бекапи</Link>
                     </Menu.Item>
                 }
                 <Menu.Item key="logout" icon={<LogoutOutlined/>} onClick={logoutHandler}>

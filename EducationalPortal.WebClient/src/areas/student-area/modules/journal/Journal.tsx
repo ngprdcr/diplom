@@ -116,7 +116,7 @@ export const Journal = () => {
             />
            <table className={s.journalTable}>
                <tr>
-                   <th></th>
+                   <th>Тип роботи</th>
                    {dates?.map(date => (
                        <>
                            {defaultDates.includes(date) && (
@@ -129,7 +129,7 @@ export const Journal = () => {
                    ))}
                </tr>
                <tr>
-                   <th></th>
+                   <th>Дата</th>
                    {dates?.map(date => (
                        <>
                             {defaultDates.includes(date) && (
